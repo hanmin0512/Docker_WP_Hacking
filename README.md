@@ -1,4 +1,4 @@
-![image](https://github.com/hanmin0512/Docker_WP_Hacking/assets/37041208/13f1f546-cc3c-4287-8bca-252a673443b8)
+
 ## Docker_WP_Hacking
 도커 환경으로 구성한 워드프레스를 도커 취약점과 워드프레스 취약점을 이용해 해킹해보기.
 
